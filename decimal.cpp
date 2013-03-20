@@ -50,7 +50,6 @@ class Decimal {
             // binary32 format
             char precision_integer_part, accumulator[23] = "";
             while (fractional_part != 0 && exponent < 23) {
-                printf("%d\n", fractional_part);
                 // get the fractional part of this iteration as a char array
                 char precision[16];
                 sprintf(precision, "%d", fractional_part);
@@ -58,7 +57,6 @@ class Decimal {
                 int fractional_length = (int) strlen(precision);
                 // get the fraction multiple
                 double multiple = ((double) fractional_part / (pow(10, fractional_length))) * 2;
-                printf("%f\n", multiple);
                 // put the result inside a char array
                 sprintf(precision, "%f", multiple);
                 // so we can split it again here
@@ -66,25 +64,33 @@ class Decimal {
                 // add the integer part to the accumulator
                 accumulator[exponent - 1] = precision_integer_part;
                 exponent++;
-                // if the fractional_part is 0, we've encoded full number
+                // if the fractional_part is 0, we've encoded the full number
                 if (fractional_part == 0) break;
             }
-            // The single-precision binary floating-point exponent is encoded
-            // using an offset-binary representation, with the zero offset
-            // being 127; also known as exponent bias in the IEEE 754 standard.
-            exponent += 127;
-            this->exponent = exponent;
 
             // Add integer and fraction, normalize, and write to the bitsets
             char conversion[23];
             this->dec2bin(integer_part, conversion);
             strcat(conversion, accumulator);
-            while (conversion[0] == '0')
-                for (char *ps = conversion; *ps != '\0'; ps++)
-                    *ps = *(ps + 1);
-            printf("test: %s\n", conversion);
+            printf("conversion: %s\n", conversion);
+            if (conversion[0] == '0') {
+                while (conversion[0] == '0') {
+                    for (char *ps = conversion; *ps != '\0'; ps++)
+                        *ps = *(ps + 1);
+                    if (integer_part == 0) exponent--;
+                }
+                if (integer_part == 0 && atoi(conversion) == 1) exponent++;
+            }
+            printf("conversion: %s\n", conversion);
             for (int i = 0; i < 23 && conversion[i] != '\0'; i++)
                 this->fraction[23 - i] = conversion[i] == '1' ? 1 : 0;
+
+            // The single-precision binary floating-point exponent is encoded
+            // using an offset-binary representation, with the zero offset
+            // being 127; also known as exponent bias in the IEEE 754 standard.
+            printf("exponent: %d\n", exponent);
+            exponent += 127;
+            this->exponent = exponent;
         }
 };
 
@@ -97,11 +103,22 @@ ostream& operator<<(ostream& out, Decimal& decimal) {
 }
 
 int main(int argc, char *argv[]) {
-    //Decimal test = Decimal("-2.5");
-    //Decimal test = Decimal("12.375");
-    //Decimal test = Decimal("1.375");
-    //Decimal test = Decimal("1");
-    Decimal test = Decimal(".25");
-    //printf("%d", test);
-    cout << test;
+    puts("\n-2.5");
+    Decimal test= Decimal("-2.5");
+    cout << test << endl;
+    puts("\n12.375");
+    test = Decimal("12.375");
+    cout << test << endl;
+    puts("\n1.375");
+    test = Decimal("1.375");
+    cout << test << endl;
+    puts("\n1");
+    test = Decimal("1");
+    cout << test << endl;
+    puts("\n.25");
+    test = Decimal("0.25");
+    cout << test << endl;
+    puts("\n.375");
+    test = Decimal("0.375");
+    cout << test << endl;
 }
