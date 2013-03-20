@@ -34,7 +34,7 @@ class Decimal {
             // consider a real number with an integer and a fraction part such as 12.375
             // https://en.wikipedia.org/wiki/Single-precision_floating-point_format
 
-            int integer_part = 0, fractional_part = 0, exponent = 1;
+            int integer_part = 0, fractional_part = 0, exponent = 0;
 
             // convert and normalize the integer part into binary
             sscanf(number, "%d.%d", &integer_part, &fractional_part);
@@ -65,9 +65,9 @@ class Decimal {
                 sscanf(precision, "%c.%d", &precision_integer_part, &fractional_part);
                 // add the integer part to the accumulator
                 accumulator[exponent - 1] = precision_integer_part;
+                exponent++;
                 // if the fractional_part is 0, we've encoded full number
                 if (fractional_part == 0) break;
-                exponent++;
             }
             // The single-precision binary floating-point exponent is encoded
             // using an offset-binary representation, with the zero offset
@@ -98,8 +98,9 @@ ostream& operator<<(ostream& out, Decimal& decimal) {
 
 int main(int argc, char *argv[]) {
     //Decimal test = Decimal("-2.5");
-    //Decimal test = Decimal("12.375");
-    Decimal test = Decimal("1.375");
+    Decimal test = Decimal("12.375");
+    //Decimal test = Decimal("1.375");
+    //Decimal test = Decimal("1");
     //printf("%d", test);
     cout << test;
 }
