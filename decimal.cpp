@@ -27,7 +27,7 @@ class Decimal {
             // consider a real number with an integer and a fraction part such as 12.375
             // https://en.wikipedia.org/wiki/Single-precision_floating-point_format
 
-            int integer_part = 0, fractional_part = 0, exponent = 0;
+            int integer_part = 0, fractional_part = 0, exponent = 1;
 
             // convert and normalize the integer part into binary
             sscanf(number, "%d.%d", &integer_part, &fractional_part);
@@ -60,6 +60,11 @@ class Decimal {
                 if (fractional_part == 0) continue;
                 exponent++;
             }
+            // The single-precision binary floating-point exponent is encoded
+            // using an offset-binary representation, with the zero offset
+            // being 127; also known as exponent bias in the IEEE 754 standard.
+            exponent += 127;
+            this->exponent = exponent;
 
             this->exponent = integer_part;
             //this->fraction = fr;
