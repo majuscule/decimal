@@ -14,16 +14,22 @@ class Decimal {
         bitset <8> exponent;
         bitset <23> fraction;
         friend ostream& operator<<(ostream& out, Decimal& d);
-        void dec2bin(int num, char *str) {
-            str[23] = '\0';
-            int mask = 0x10 << 1;
-            while(mask >>= 1)
-              *str++ = !!(mask & num) + '0';
-        }
     public:
-        Decimal operator +  (const Decimal&);
-        Decimal operator *  (const Decimal&);
-        Decimal operator == (const Decimal&);
+        Decimal operator + (const Decimal &rhs) {
+            return *this;
+        };
+        Decimal operator * (const Decimal &rhs) {
+            return *this;
+        };
+        bool operator == (const Decimal &rhs) {
+            printf("%d : %d\n", this->exponent, rhs.exponent);
+            printf("%d : %d\n", this->fraction, rhs.fraction);
+            printf("%d : %d\n", this->sign, rhs.sign);
+            return this->exponent == rhs.exponent &&
+                   this->fraction == rhs.fraction &&
+                   this->sign == rhs.sign ?
+                   true : false;
+        }
 
         Decimal(const char *number) {
             if (number[0] == '-') {
@@ -69,13 +75,15 @@ class Decimal {
             }
 
             // Add integer and fraction, normalize, and write to the bitsets
-            char conversion[23];
-            this->dec2bin(integer_part, conversion);
+            char conversion[23], *ps = conversion;
+            int mask = 0x10 << 1;
+            while(mask >>= 1)
+                *ps++ = !!(mask & integer_part) + '0';
             strcat(conversion, accumulator);
             printf("conversion: %s\n", conversion);
             if (conversion[0] == '0') {
                 while (conversion[0] == '0') {
-                    for (char *ps = conversion; *ps != '\0'; ps++)
+                    for (ps = conversion; *ps != '\0'; ps++)
                         *ps = *(ps + 1);
                     if (integer_part == 0) exponent--;
                 }
@@ -121,4 +129,13 @@ int main(int argc, char *argv[]) {
     puts("\n.375");
     test = Decimal("0.375");
     cout << test << endl;
+
+    Decimal a = Decimal("1");
+    cout << a << endl;
+    Decimal b = Decimal("2");
+    cout << b << endl;
+    Decimal c = Decimal("1");
+    cout << c << endl;
+    if (a == b) puts("\nuh-oh");
+    if (a == c) puts("\nok");
 }
