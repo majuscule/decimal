@@ -77,11 +77,10 @@ class Decimal {
 
             // Add integer and fraction, normalize, and write to the bitsets
             char conversion[23];
-            char *ps = conversion;
             this->dec2bin(integer_part, conversion);
             strcat(conversion, accumulator);
             while (conversion[0] == '0')
-                for (; *ps != '\0'; ps++)
+                for (char *ps = conversion; *ps != '\0'; ps++)
                     *ps = *(ps + 1);
             printf("test: %s\n", conversion);
             for (int i = 0; i < 23 && conversion[i] != '\0'; i++)
