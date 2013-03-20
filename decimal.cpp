@@ -27,9 +27,9 @@ class Decimal {
 
         Decimal(const char *number) {
             if (number[0] == '-') {
-                this->sign = 0;
+                this->sign = 1;
                 number = number + 1;
-            } else this->sign = 1;
+            } else this->sign = 0;
 
             // consider a real number with an integer and a fraction part such as 12.375
             // https://en.wikipedia.org/wiki/Single-precision_floating-point_format
@@ -98,9 +98,10 @@ ostream& operator<<(ostream& out, Decimal& decimal) {
 
 int main(int argc, char *argv[]) {
     //Decimal test = Decimal("-2.5");
-    Decimal test = Decimal("12.375");
+    //Decimal test = Decimal("12.375");
     //Decimal test = Decimal("1.375");
     //Decimal test = Decimal("1");
+    Decimal test = Decimal(".25");
     //printf("%d", test);
     cout << test;
 }
