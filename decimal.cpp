@@ -46,14 +46,18 @@ class Decimal {
                 // get the fractional part of this iteration as a char array
                 char precision[16];
                 sprintf(precision, "%d", fractional_part);
-                // get the length
+                // get the length to make it a fraction from an int
                 int fractional_length = (int) strlen(precision);
+                // get the fraction multiple
                 double multiple = ((double) fractional_part / (pow(10, fractional_length))) * 2;
+                // put the result inside a char array
                 sprintf(precision, "%f", multiple);
-                sscanf(number, "%d.%d", &precision_integer_part, &fractional_part);
+                // so we can split it again here
+                sscanf(precision, "%d.%d", &precision_integer_part, &fractional_part);
+                // add the integer part to the accumulator
                 accumulator += precision_integer_part;
+                // if the fractional_part is 0, we've encoded full number
                 if (fractional_part == 0) continue;
-                printf("%f\n", precision);
                 exponent++;
             }
 
